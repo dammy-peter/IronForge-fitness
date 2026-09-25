@@ -1,0 +1,194 @@
+/* ==========================================================================
+   RESPONSIVE — breakpoint refinements not covered inline in other files
+   Breakpoints tested: 320 / 375 / 390 / 414 / 768 / 1024 / 1280 / 1440 / 1920
+   ========================================================================== */
+
+/* Small phones: tighten paddings and stack hero actions full-width */
+@media (max-width: 380px) {
+  :root { --container-pad: 1rem; }
+  .hero__actions .btn,
+  .cta-block__actions .btn { width: 100%; }
+  .stat { padding: 1.4rem 0.5rem; }
+}
+
+/* Large tablets / small laptops */
+@media (min-width: 1024px) {
+  .hero { min-height: 92vh; }
+}
+
+/* Big desktop: cap line-length growth, add breathing room */
+@media (min-width: 1440px) {
+  :root { --container-width: 1280px; }
+}
+@media (min-width: 1920px) {
+  :root { --container-width: 1360px; }
+}
+
+/* Ensure no accidental horizontal scroll anywhere */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Membership: feature the Pro card on desktop by lifting it */
+@media (min-width: 900px) {
+  .membership-grid { align-items: end; }
+  .plan-card--featured { padding-top: 2.4rem; }
+}
+
+/* Print styles: keep it simple and readable */
+@media print {
+  .site-header, .mobile-menu, .whatsapp-float, .back-to-top, .announcement, .site-footer { display: none; }
+  body { background: #fff; color: #000; }
+}
+
+/* ---- Membership responsive refinements ---- */
+@media (min-width: 560px) {
+  .membership-value-strip__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .membership-value-strip__grid article:nth-child(odd) {
+    padding-right: 1.25rem;
+    border-right: 1px solid var(--color-border);
+  }
+  .membership-value-strip__grid article:nth-child(even) {
+    padding-left: 1.25rem;
+  }
+  .membership-value-strip__grid article:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+  .membership-path { padding: 1.4rem 1.5rem; }
+}
+
+@media (min-width: 720px) {
+  .membership-benefits {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 2rem;
+  }
+  .membership-benefits article:nth-child(odd) {
+    padding-right: 1rem;
+    border-right: 1px solid var(--color-border);
+  }
+  .membership-benefits article:nth-child(even) {
+    padding-left: 1rem;
+  }
+}
+
+@media (min-width: 860px) {
+  .membership-value-strip__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .membership-value-strip__grid article {
+    padding: 1.5rem 1rem !important;
+    border-bottom: 0 !important;
+    border-right: 1px solid var(--color-border);
+  }
+  .membership-value-strip__grid article:first-child { padding-left: 0 !important; }
+  .membership-value-strip__grid article:last-child {
+    border-right: 0;
+    padding-right: 0 !important;
+  }
+  .membership-trial {
+    grid-template-columns: 1.5fr 0.8fr;
+    align-items: center;
+  }
+  .membership-trial__side {
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+    padding: 0 0 0 2rem;
+  }
+  .membership-coaching {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+  .membership-coaching__image { min-height: 360px; }
+  .membership-coaching__image img { min-height: 360px; }
+}
+
+@media (min-width: 1024px) {
+  .membership-grid--pricing {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .membership-grid--pricing .plan-card {
+    min-height: 100%;
+  }
+  .membership-grid--pricing .plan-card--featured {
+    transform: translateY(-8px);
+  }
+  .membership-grid--pricing .plan-card--featured:hover {
+    transform: translateY(-12px);
+  }
+}
+/* ==========================================================================
+   TRAINERS HERO — MOBILE
+   ========================================================================== */
+
+@media (max-width: 639px) {
+
+  .page-hero--trainers {
+    min-height: 620px;
+    align-items: flex-end;
+    padding-block: 4rem 3.5rem;
+  }
+
+  .page-hero--trainers .page-hero__breadcrumbs {
+    margin-bottom: 1.75rem;
+  }
+
+  .page-hero--trainers .page-hero__bg img {
+    object-position: 58% center;
+  }
+
+  .page-hero--trainers .page-hero__bg::after {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(9, 9, 9, 0.40) 0%,
+        rgba(9, 9, 9, 0.30) 30%,
+        rgba(9, 9, 9, 0.82) 68%,
+        rgba(9, 9, 9, 0.97) 100%
+      );
+  }
+
+  .page-hero--trainers .eyebrow {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-hero--trainers h1 {
+    margin-bottom: 1rem;
+    font-size: clamp(2.35rem, 11vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  .page-hero--trainers .lead {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .page-hero--trainers .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 1.5rem;
+  }
+
+  .page-hero--trainers .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Small phones */
+@media (max-width: 390px) {
+
+  .page-hero--trainers {
+    min-height: 650px;
+  }
+
+  .page-hero--trainers .page-hero__breadcrumbs {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-hero--trainers h1 {
+    font-size: 2.25rem;
+  }
+}

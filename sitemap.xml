@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.ironforgefitness.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.ironforgefitness.com/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ironforgefitness.com/classes.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.ironforgefitness.com/class-detail.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.ironforgefitness.com/trainers.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ironforgefitness.com/trainer-detail.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.ironforgefitness.com/membership.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.ironforgefitness.com/gallery.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.ironforgefitness.com/blog.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ironforgefitness.com/blog-detail.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.ironforgefitness.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>
