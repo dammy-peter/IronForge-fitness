@@ -192,3 +192,34 @@ html, body {
     font-size: 2.25rem;
   }
 }
+
+/* ==========================================================================
+   SECTION HEADINGS (SPLIT) — MOBILE
+   Desktop/tablet keep the row layout from layout.css (.section-head--split).
+   On phones, stack and center the heading block and its CTA. Applies to
+   every page that uses .section-head--split.
+   ========================================================================== */
+
+@media (max-width: 639px) {
+
+  .section-head--split {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .section-head--split > div {
+    width: 100%;
+  }
+
+  /* Centers supporting copy that has its own max-width (e.g. 50ch) */
+  .section-head--split > div > p {
+    margin-inline: auto;
+  }
+
+  .section-head--split .btn {
+    align-self: center;
+  }
+}
