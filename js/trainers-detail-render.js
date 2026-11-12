@@ -64,7 +64,12 @@
       .join("");
   }
 
-  setText("cta-train-with", `Train with ${trainer.name.split(" ")[0]}`);
+  const trainWithCta = document.getElementById("cta-train-with");
+  if (trainWithCta) {
+    trainWithCta.textContent = `Train with ${trainer.name.split(" ")[0]}`;
+    trainWithCta.dataset.trainerSlug = trainer.slug;
+    trainWithCta.dataset.trainerName = trainer.name;
+  }
 
   /* ---- Quick facts ---- */
   const factsEl = document.getElementById("quick-facts");

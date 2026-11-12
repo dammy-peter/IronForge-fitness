@@ -1,0 +1,6 @@
+
+# Local secrets and Supabase environment files
+.env
+.env.*
+!.env.example
+supabase/.temp/

@@ -1,0 +1,4 @@
+project_id = "ironforge-fitness"
+
+[functions.public-intake]
+verify_jwt = false
