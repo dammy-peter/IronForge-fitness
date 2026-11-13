@@ -32,10 +32,32 @@ Supabase provides `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to deployed Edg
 For production, restrict the CORS origin to the actual deployed website origin:
 
 ```bash
-supabase secrets set ALLOWED_ORIGIN="https://YOUR-ACTUAL-DOMAIN"
+npx supabase secrets set ALLOWED_ORIGIN="https://iron-forge-fitness-pi.vercel.app"
 ```
 
-For local preview, use the exact local origin you serve the site from. The current function defaults to `*` until an allowed origin is configured; this is not a substitute for the function's server-side validation and rate limiting. Never put a service-role/secret key in frontend code or GitHub.
+The function also rejects requests carrying a different browser `Origin` once this secret is set. Never put a service-role/secret key in frontend code or GitHub.
+
+## 4. Configure Stage 4 email notifications
+
+Stage 4 uses Resend to send (a) a new-enquiry notification to the gym and (b) an acknowledgement to the customer. Database writes remain successful even if email delivery is not configured or temporarily fails. The response includes `emailStatus` (`sent`, `not_configured`, `partial_or_failed`, or `failed`).
+
+1. Create a Resend account and verify a domain you control. Do not use the `vercel.app` hostname as an email sender domain.
+2. Create a Resend API key.
+3. Set these Edge Function secrets (replace the example values):
+
+```bash
+npx supabase secrets set RESEND_API_KEY="re_..." EMAIL_FROM="IRONFORGE FITNESS <notifications@YOUR-VERIFIED-DOMAIN>" GYM_NOTIFICATION_EMAIL="YOUR-GYM-INBOX@example.com"
+```
+
+`EMAIL_FROM` must use the sender/domain verified in Resend. `GYM_NOTIFICATION_EMAIL` is the inbox that should receive new enquiries. Keep the Resend key server-side; never add it to JavaScript, `.env` files committed to Git, or Vercel frontend variables.
+
+After setting secrets, redeploy the function:
+
+```bash
+npx supabase functions deploy public-intake --no-verify-jwt
+```
+
+## 5. Verify deployment
 
 ## 4. Verify deployment
 
@@ -51,10 +73,10 @@ After deployment, test:
 
 A successful HTTP response alone is not sufficient: verify the expected database row and capacity behavior in the Supabase Dashboard.
 
-## 5. Important launch notes
+## 6. Important launch notes
 
 - The browser publishable key is public by design; RLS and the Edge Function protect data.
 - Never expose `service_role`, `sb_secret_...`, database passwords or Resend API keys in frontend code or GitHub.
 - Class booking requests remain `pending` until gym staff confirms them.
 - The seeded timetable is demo data and must be replaced before launch.
-- Email notifications are not configured yet; Stage 4 will add the email provider and notification flow.
+- Email delivery requires the Resend secrets described above and a verified sender domain. Until then, requests are still saved and `emailStatus` reports `not_configured`.

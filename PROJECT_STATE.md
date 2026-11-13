@@ -18,8 +18,9 @@ Version 1 frontend foundation is preserved from the supplied `I-forge.zip`: 12 s
 - [x] Capacity-aware public session listing added.
 - [x] Responsive live timetable with day/program filters added to Home and Classes pages.
 - [x] Class booking request modal and pending-status submission flow added.
-- [ ] Supabase SQL migrations applied and verified in project `sjyabrutzqsfifboduzu` (requires Dashboard/CLI access).
-- [ ] `public-intake` Edge Function deployed; configure `ALLOWED_ORIGIN` for production.
+- [x] Supabase SQL migrations applied by project owner.
+- [x] `public-intake` Edge Function deployed by project owner; production origin configuration was requested.
+- [ ] Redeploy updated Stage 4 `public-intake` function after setting Resend secrets.
 - [x] Stage 2 free-trial and personal-training request modal added with preferred date/time and trainer context.
 - [x] Stage 2 Edge Function GET handling corrected and server-side date/time validation added.
 - [ ] Stage 2 live backend verification and final acceptance (requires Supabase deployment).
@@ -32,7 +33,13 @@ Version 1 frontend foundation is preserved from the supplied `I-forge.zip`: 12 s
 - [x] Goal/experience/weekday-based workout planner implemented with local save and print.
 - [x] Stage 3 planner upgraded to select actual weekdays (2–6), with plan restore and safer localStorage handling.
 - [ ] Stage 3 browser/device QA and content review.
-- [ ] Stage 4 email notifications and functional forms.
+- [x] Membership plan CTAs open a selected-plan enquiry modal rather than redirecting to Contact.
+- [x] Membership enquiries submit to Supabase and store the selected plan slug.
+- [x] Contact form submits to Supabase rather than using a demo-only success state.
+- [x] Resend email notification and customer acknowledgement flow implemented server-side in the Edge Function.
+- [x] Email delivery status is returned separately so email-provider failure does not lose stored submissions.
+- [ ] Configure Resend API key, verified sender and gym notification inbox; redeploy updated Edge Function.
+- [ ] Live test contact, membership, class, free-trial and personal-training submissions and email delivery.
 - [ ] Stage 5 cross-page integration.
 - [ ] Stage 6 end-to-end QA and deployment.
 
@@ -42,7 +49,7 @@ Version 1 frontend foundation is preserved from the supplied `I-forge.zip`: 12 s
 - All local script and stylesheet references resolve.
 - `sitemap.xml` parses as valid XML.
 - Version 2 intake script is loaded on all 13 pages; free-trial and personal-training CTAs are wired to the request modal.
-- Frontend Supabase project configuration is now present. Live behavior remains unverified because database migrations and the Edge Function have not yet been deployed.
+- Frontend Supabase project configuration is present. The project owner confirmed both SQL migrations and the first `public-intake` deployment succeeded. The updated Stage 4 function still needs redeployment, and live form/email behavior has not yet been verified.
 
 ## Important constraints
 - Keep the current HTML/CSS/vanilla-JS stack.
@@ -51,4 +58,4 @@ Version 1 frontend foundation is preserved from the supplied `I-forge.zip`: 12 s
 - V3-only scope: member login/dashboard, payments/subscriptions, admin/trainer dashboards, QR check-in and member progress tracking.
 
 ## Next action
-Apply both migrations in filename order, deploy the `public-intake` Edge Function, set the production `ALLOWED_ORIGIN`, and run live booking tests using `SUPABASE_DEPLOYMENT.md`. Then run live timetable, class booking, free-trial and personal-training request tests. After that, complete browser/device QA for Stage 3.
+Set the production `ALLOWED_ORIGIN`, configure Resend secrets (`RESEND_API_KEY`, `EMAIL_FROM`, `GYM_NOTIFICATION_EMAIL`), redeploy `public-intake`, and run live contact/membership/booking/email tests. Then complete cross-page integration and browser/device QA.

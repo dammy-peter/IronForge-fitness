@@ -28,7 +28,7 @@
           <ul class="plan-card__list" aria-label="${plan.name} membership benefits">
             ${plan.features.map((feature) => `<li>${feature}</li>`).join("")}
           </ul>
-          <a href="contact.html" class="btn ${plan.popular ? "btn--primary" : "btn--outline"} btn--block">${plan.cta}</a>
+          <button type="button" class="btn ${plan.popular ? "btn--primary" : "btn--outline"} btn--block" data-v2-intake="membership" data-membership-plan="${plan.slug}" data-membership-name="${plan.name}">${plan.cta}</button>
         </article>`
     )
     .join("");

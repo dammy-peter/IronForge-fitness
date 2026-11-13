@@ -7,7 +7,7 @@
 | 1 | Architecture, Supabase schema, secure intake Edge Function foundation, frontend API client | Code prepared; deployment pending |
 | 2 | Interactive timetable, session availability, class booking, free-trial/PT request UI | Implementation complete; live Supabase verification pending |
 | 3 | BMI, calorie-needs estimator, fitness goal selector, weekday-based workout planner | Implementation complete locally; browser/device QA pending |
-| 4 | Contact/membership backend forms, Resend notifications, confirmation emails | Pending |
+| 4 | Contact/membership backend forms, Resend notifications, confirmation emails | Implemented locally; Resend configuration and live tests pending |
 | 5 | Cross-page integration, booking CTAs, success/loading/error states, responsive polish | Pending |
 | 6 | End-to-end testing, security checks, deployment and documentation | Pending |
 
@@ -41,3 +41,13 @@
 - Deploy `supabase/functions/public-intake` and configure `SUPABASE_SERVICE_ROLE_KEY` plus `ALLOWED_ORIGIN` as Edge Function secrets.
 - Keep the service-role key private; never put it in browser JavaScript or GitHub.
 - Confirm the production domain and real gym timetable before public launch.
+
+
+## Stage 4 implementation notes
+- Membership plan CTAs now open a membership enquiry form with the selected plan prefilled instead of redirecting every plan button to Contact.
+- Membership requests are stored in `public.enquiries` with the selected plan slug and enquiry subject.
+- Contact form now submits to the public-intake Edge Function instead of showing a demo-only success message.
+- Edge Function sends a gym notification and customer acknowledgement through Resend when `RESEND_API_KEY`, `EMAIL_FROM`, and `GYM_NOTIFICATION_EMAIL` are configured.
+- Email failure does not discard a successfully stored enquiry or booking; API returns an `emailStatus` field.
+- Browser form validation, submission/loading states, honeypot and existing server-side rate limiting are retained.
+- Deployment and live verification are still required: set the Resend secrets, deploy the updated Edge Function, then test contact, membership, free-trial, PT and class booking flows.

@@ -16,7 +16,67 @@ const text = (value: unknown, max = 4000) =>
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[0-9+()\s.-]{7,30}$/;
 
+function escapeHtml(value: string) {
+  const entities: Record<string, string> = {
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;",
+  };
+  return value.replace(/[&<>"']/g, (char) => entities[char] ?? char);
+}
+
+async function sendIntakeEmails(details: {
+  type: string; reference: string; fullName: string; email: string; phone?: string;
+  subject?: string; message?: string; preferredDate?: string; preferredTime?: string;
+  plan?: string; className?: string;
+}) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const from = Deno.env.get("EMAIL_FROM");
+  const gymEmail = Deno.env.get("GYM_NOTIFICATION_EMAIL");
+  if (!apiKey || !from || !gymEmail) return "not_configured";
+
+  const safeName = escapeHtml(details.fullName);
+  const safeType = escapeHtml(details.type.replaceAll("_", " "));
+  const safeRef = escapeHtml(details.reference);
+  const rows = [
+    ["Request type", safeType], ["Name", safeName], ["Email", escapeHtml(details.email)],
+    ["Phone", escapeHtml(details.phone || "Not provided")], ["Plan / class", escapeHtml(details.plan || details.className || "Not applicable")],
+    ["Preferred date", escapeHtml(details.preferredDate || "Not specified")],
+    ["Preferred time", escapeHtml(details.preferredTime || "Not specified")],
+    ["Subject", escapeHtml(details.subject || "Not provided")],
+    ["Message", escapeHtml(details.message || "Not provided").replaceAll("\n", "<br>")],
+  ];
+  const detailsHtml = rows.map(([label, value]) => `<tr><th align="left" style="padding:8px;border-bottom:1px solid #eee">${label}</th><td style="padding:8px;border-bottom:1px solid #eee">${value}</td></tr>`).join("");
+  const html = `<div style="font-family:Arial,sans-serif;color:#171717;max-width:640px;margin:auto"><h2>IRONFORGE FITNESS</h2><p>We received a new ${safeType} request.</p><p><strong>Reference:</strong> ${safeRef}</p><table style="border-collapse:collapse;width:100%">${detailsHtml}</table></div>`;
+  const customerHtml = `<div style="font-family:Arial,sans-serif;color:#171717;max-width:600px;margin:auto"><h2>We received your request</h2><p>Hi ${safeName},</p><p>Thank you for contacting IRONFORGE FITNESS. Your ${safeType} request has been received.</p><p><strong>Reference:</strong> ${safeRef}</p><p>Our team will review it and contact you. This message is an acknowledgement, not a booking or membership confirmation.</p><p>IRONFORGE FITNESS</p></div>`;
+  const send = async (to: string, subject: string, body: string) => {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [to], subject, html: body }),
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Resend email failed", response.status, errorText.slice(0, 500));
+      return false;
+    }
+    return true;
+  };
+  try {
+    const safeSubjectName = details.fullName.replace(/[\r\n]+/g, " ").slice(0, 120);
+    const adminSent = await send(gymEmail, `New ${details.type.replaceAll("_", " ")} — ${safeSubjectName}`, html);
+    const customerSent = await send(details.email, "We received your IRONFORGE FITNESS request", customerHtml);
+    return adminSent && customerSent ? "sent" : "partial_or_failed";
+  } catch (error) {
+    console.error("Email notification error", error);
+    return "failed";
+  }
+}
+
 Deno.serve(async (req) => {
+  const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN");
+  const requestOrigin = req.headers.get("origin");
+  if (allowedOrigin && requestOrigin && requestOrigin !== allowedOrigin) {
+    return json(403, { error: "ORIGIN_NOT_ALLOWED" });
+  }
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST" && req.method !== "GET") return json(405, { error: "METHOD_NOT_ALLOWED" });
 
@@ -97,7 +157,11 @@ Deno.serve(async (req) => {
       console.error("Enquiry insert failed", error);
       return json(500, { error: "SUBMISSION_FAILED" });
     }
-    return json(201, { success: true, reference: data.id, status: "received" });
+    const emailStatus = await sendIntakeEmails({
+      type, reference: data.id, fullName, email, phone,
+      subject: text(payload.subject, 160), message, plan: text(payload.membershipPlanSlug, 80),
+    });
+    return json(201, { success: true, reference: data.id, status: "received", emailStatus });
   }
 
   if (type === "free_trial" || type === "personal_training") {
@@ -136,7 +200,12 @@ Deno.serve(async (req) => {
       console.error("Booking insert failed", error);
       return json(500, { error: "SUBMISSION_FAILED" });
     }
-    return json(201, { success: true, reference: data.id, status: "pending" });
+    const emailStatus = await sendIntakeEmails({
+      type, reference: data.id, fullName, email, phone,
+      preferredDate, preferredTime, message: text(payload.notes, 2000),
+      plan: text(payload.membershipPlanSlug, 80),
+    });
+    return json(201, { success: true, reference: data.id, status: "pending", emailStatus });
   }
 
   if (type === "class") {
@@ -162,7 +231,12 @@ Deno.serve(async (req) => {
       return json(500, { error: "SUBMISSION_FAILED" });
     }
     const row = Array.isArray(data) ? data[0] : data;
-    return json(201, { success: true, reference: row?.booking_id, status: row?.booking_status ?? "pending" });
+    const reference = String(row?.booking_id ?? "");
+    const emailStatus = await sendIntakeEmails({
+      type: "class_booking", reference, fullName, email, phone,
+      message: text(payload.notes, 2000), className: "Booked class session",
+    });
+    return json(201, { success: true, reference, status: row?.booking_status ?? "pending", emailStatus });
   }
 
   return json(400, { error: "UNKNOWN_SUBMISSION_TYPE" });
