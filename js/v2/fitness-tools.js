@@ -65,6 +65,12 @@
   function renderPlan(plan) {
     if (!planOutput || !plan || !Array.isArray(plan.sessions) || !goalLabels[plan.goal] || !levelLabels[plan.level]) return;
     planOutput.innerHTML = `<p class="eyebrow">Your weekly outline</p><h2>${goalLabels[plan.goal].toUpperCase()}.</h2><p class="v2-plan-summary">${plan.days} training days · ${levelLabels[plan.level]} · Example weekly structure</p><div class="v2-plan-days">${plan.sessions.map((item) => `<article class="v2-plan-day"><span>${escapeHtml(item.day.slice(0, 3).toUpperCase())}</span><strong>${escapeHtml(item.workout)}</strong></article>`).join("")}</div><p class="v2-plan-note">${levelNotes[plan.level]}</p>`;
+    const coachCta = planActions.querySelector("[data-plan-coach-cta]");
+    if (coachCta) {
+      coachCta.dataset.fitnessGoal = goalLabels[plan.goal];
+      coachCta.dataset.experienceLevel = levelLabels[plan.level];
+      coachCta.dataset.planDays = String(plan.days);
+    }
     planActions.hidden = false;
   }
 
@@ -129,6 +135,12 @@
       planOutput.removeAttribute("data-plan");
       planOutput.innerHTML = '<p class="eyebrow">Your weekly outline</p><h2>READY WHEN YOU ARE.</h2><p class="v2-tool-result__placeholder">Complete the planner to generate your week.</p>';
       planActions.hidden = true;
+      const coachCta = planActions.querySelector("[data-plan-coach-cta]");
+      if (coachCta) {
+        delete coachCta.dataset.fitnessGoal;
+        delete coachCta.dataset.experienceLevel;
+        delete coachCta.dataset.planDays;
+      }
     });
 
     const saved = safeStorage("get");

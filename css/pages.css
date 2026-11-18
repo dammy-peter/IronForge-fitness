@@ -1,9 +1,7 @@
 /* ==========================================================================
    PAGES — page-specific layout (home hero, about, detail pages, contact, 404)
    ========================================================================== */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+
 /* ---- Home hero ---- */
 .hero {
   position: relative;

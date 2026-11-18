@@ -74,6 +74,14 @@
     return;
   }
 
+  // Keep the primary conversion CTA connected to the program currently viewed.
+  const programRequestCta = document.getElementById("program-trial-cta");
+  if (programRequestCta) {
+    programRequestCta.dataset.programSlug = slug;
+    programRequestCta.dataset.programName = program.name;
+    programRequestCta.setAttribute("aria-label", `Request a free trial for ${program.name}`);
+  }
+
   /* ------------------------------------------------------------------------
      HELPERS
      ------------------------------------------------------------------------ */

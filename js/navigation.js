@@ -39,17 +39,6 @@
       if (e.target === menu) closeMenu();
     });
 
-    // Close when clicking the dimmed page area beside the panel
-    document.addEventListener("click", (e) => {
-      if (
-        menu.classList.contains("is-open") &&
-        !menu.contains(e.target) &&
-        !toggle.contains(e.target)
-      ) {
-        closeMenu();
-      }
-    });
-
     // Close on Escape
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && menu.classList.contains("is-open")) {

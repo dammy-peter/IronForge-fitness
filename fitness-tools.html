@@ -23,7 +23,7 @@
     <div class="announcement">
       <div class="container announcement__inner">
         <span>NEW MEMBERS — BOOK YOUR FREE FITNESS CONSULTATION</span>
-        <a class="announcement__cta" href="contact.html">Get Started</a>
+        <a class="announcement__cta" href="contact.html" data-v2-intake="free_trial">Get Started</a>
       </div>
     </div>
 
@@ -187,7 +187,11 @@
           </form>
           <div class="v2-tool-card v2-plan-output" data-plan-output aria-live="polite"><p class="eyebrow">Your weekly outline</p><h2>READY WHEN YOU ARE.</h2><p class="v2-tool-result__placeholder">Complete the planner to generate your week.</p></div>
         </div>
-        <div class="v2-plan-actions" data-plan-actions hidden><button class="btn btn--ghost" type="button" data-save-plan>Save Plan</button><button class="btn btn--ghost" type="button" data-print-plan>Print / Save PDF</button></div>
+        <div class="v2-plan-actions" data-plan-actions hidden>
+          <button class="btn btn--ghost" type="button" data-save-plan>Save Plan</button>
+          <button class="btn btn--ghost" type="button" data-print-plan>Print / Save PDF</button>
+          <button class="btn btn--primary" type="button" data-v2-intake="personal_training" data-plan-coach-cta>Discuss My Plan With a Coach</button>
+        </div>
         <p class="v2-tools-disclaimer">This planner creates a general example, not an individualized training prescription. Start at a manageable level, allow recovery between demanding sessions, and ask a qualified coach to adapt exercises to your needs.</p>
       </div>
     </section>
